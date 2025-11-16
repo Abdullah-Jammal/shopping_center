@@ -16,7 +16,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
+import { DataTablePagination } from "./DataTablePagination";
 
 export function DataTable({ columns, data, metadata }: any) {
   const table = useReactTable({
@@ -75,19 +75,7 @@ export function DataTable({ columns, data, metadata }: any) {
           </TableBody>
         </Table>
       </div>
-
-      <div className="flex justify-center gap-3 mt-4">
-        <Button
-          disabled={!metadata.hasPrevious}
-          onClick={() => table.previousPage()}
-        >
-          السابق
-        </Button>
-
-        <Button disabled={!metadata.hasNext} onClick={() => table.nextPage()}>
-          التالي
-        </Button>
-      </div>
+      <DataTablePagination table={table} />
     </div>
   );
 }

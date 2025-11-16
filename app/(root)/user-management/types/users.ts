@@ -19,3 +19,19 @@ export interface UsersResponse {
     hasPrevious: boolean;
   };
 }
+
+
+export interface UseGetUsersProps {
+  page?: number;
+  pageSize?: number;
+  search?: string;
+  filterType?: string | null;
+}
+
+
+export interface GetAllUsersParams {
+  page?: number;
+  pageSize?: number;
+  search?: string;
+  filterType?: string | null;
+}

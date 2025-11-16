@@ -1,13 +1,11 @@
-"use client";
-
-import { Badge } from "@/components/ui/badge";
-import { User } from "../types/users";
 import { ColumnDef } from "@tanstack/react-table";
+import { Badge } from "@/components/ui/badge";
 
-export const columns: ColumnDef<User>[] = [
+export const columns: ColumnDef<any>[] = [
   {
     accessorKey: "fullName",
     header: "الاسم الكامل",
+    cell: ({ row }) => row.original.fullName || "—",
   },
   {
     accessorKey: "email",
@@ -16,25 +14,19 @@ export const columns: ColumnDef<User>[] = [
   {
     accessorKey: "phoneNumber",
     header: "رقم الهاتف",
-    cell: ({ row }) =>
-      row.original.phoneNumber ? row.original.phoneNumber : "—",
+    cell: ({ row }) => row.original.phoneNumber || "—",
   },
   {
     accessorKey: "entityType",
     header: "نوع المستخدم",
-    cell: ({ row }) => (
-      <Badge variant="secondary" className="px-3 py-1">
-        {row.original.entityType}
-      </Badge>
-    ),
   },
   {
     accessorKey: "roles",
     header: "الصلاحيات",
     cell: ({ row }) => (
-      <div className="flex gap-1 flex-wrap">
-        {row.original.roles.map((role) => (
-          <Badge key={role} className="px-2 py-1">
+      <div className="flex gap-2">
+        {row.original.roles?.map((role: string) => (
+          <Badge key={role} className="w-fit bg-orange-100/90 text-orange-500/90 px-3 py-1 shadow">
             {role}
           </Badge>
         ))}

@@ -38,12 +38,11 @@ export default function UsersPage() {
         />
       </div>
 
-      {/* You can put charts or tables here */}
       <div className="mt-8">
         <div className="bg-white p-6 border rounded-xl shadow-sm">
           <h2 className="text-xl font-bold mb-4">نظرة عامة على النظام</h2>
           <p className="text-gray-600">
-            يمكنك إضافة مخططات أو آخر النشاطات هنا.
+            سيتم إضافة مخططات أو آخر النشاطات هنا.
           </p>
         </div>
       </div>

@@ -2,5 +2,8 @@ import { ReactNode } from "react";
 
 export interface DashboardLayoutProps {
   title?: string;
-  children: ReactNode;
+  subtitle?: string;
+  userName?: string;
+  role?: string;
+  children: React.ReactNode;
 }

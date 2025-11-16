@@ -7,29 +7,25 @@ import Cookies from "js-cookie";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
-const axiosInstance = axios.create({
+export const axiosInstance = axios.create({
   baseURL: BASE_URL,
   headers: {
     "Content-Type": "application/json",
   },
 });
-
-let isRefreshing = false;
-
-let failedRequestsQueue: any[] = [];
-
 axiosInstance.interceptors.request.use(
   (config) => {
     const accessToken = Cookies.get("token");
-
     if (accessToken) {
       config.headers["Authorization"] = `Bearer ${accessToken}`;
     }
-
     return config;
   },
   (error) => Promise.reject(error)
 );
+
+let isRefreshing = false;
+let failedRequestsQueue: any[] = [];
 
 axiosInstance.interceptors.response.use(
   (response) => response,
@@ -41,19 +37,15 @@ axiosInstance.interceptors.response.use(
       originalRequest._retry = true;
 
       const refreshToken = Cookies.get("refreshToken");
-
       if (!refreshToken) {
         return logoutAndRedirect(refreshToken);
       }
 
       if (isRefreshing) {
-        return new Promise((resolve, reject) => {
-          failedRequestsQueue.push({
-            resolve,
-            reject,
-          });
+        return new Promise<string>((resolve, reject) => {
+          failedRequestsQueue.push({ resolve, reject });
         })
-          .then((token: any) => {
+          .then((token) => {
             originalRequest.headers["Authorization"] = "Bearer " + token;
             return axiosInstance(originalRequest);
           })
@@ -64,12 +56,12 @@ axiosInstance.interceptors.response.use(
 
       try {
         const { data } = await axios.post(
-          `${BASE_URL}Auth/refresh-token`,
+          `${BASE_URL}/Auth/refresh-token`,
           { refreshToken },
           { headers: { "Content-Type": "application/json" } }
         );
 
-        const newAccessToken = data.accessToken;
+        const newAccessToken = data.token;
         const newRefreshToken = data.refreshToken;
 
         Cookies.set("token", newAccessToken);
@@ -80,8 +72,8 @@ axiosInstance.interceptors.response.use(
         isRefreshing = false;
 
         originalRequest.headers["Authorization"] = "Bearer " + newAccessToken;
-
         return axiosInstance(originalRequest);
+
       } catch (err) {
         failedRequestsQueue.forEach((req) => req.reject(err));
         failedRequestsQueue = [];
@@ -94,5 +86,3 @@ axiosInstance.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-
-export default axiosInstance;
