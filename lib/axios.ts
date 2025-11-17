@@ -13,6 +13,7 @@ export const axiosInstance = axios.create({
     "Content-Type": "application/json",
   },
 });
+
 axiosInstance.interceptors.request.use(
   (config) => {
     const accessToken = Cookies.get("token");
@@ -32,21 +33,23 @@ axiosInstance.interceptors.response.use(
 
   async (error) => {
     const originalRequest = error.config;
+    if (!originalRequest) return Promise.reject(error);
 
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
       const refreshToken = Cookies.get("refreshToken");
+
       if (!refreshToken) {
         return logoutAndRedirect(refreshToken);
       }
 
       if (isRefreshing) {
-        return new Promise<string>((resolve, reject) => {
+        return new Promise((resolve, reject) => {
           failedRequestsQueue.push({ resolve, reject });
         })
           .then((token) => {
-            originalRequest.headers["Authorization"] = "Bearer " + token;
+            originalRequest.headers["Authorization"] = `Bearer ${token}`;
             return axiosInstance(originalRequest);
           })
           .catch((err) => Promise.reject(err));
@@ -58,7 +61,11 @@ axiosInstance.interceptors.response.use(
         const { data } = await axios.post(
           `${BASE_URL}/Auth/refresh-token`,
           { refreshToken },
-          { headers: { "Content-Type": "application/json" } }
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
         );
 
         const newAccessToken = data.token;
@@ -69,11 +76,11 @@ axiosInstance.interceptors.response.use(
 
         failedRequestsQueue.forEach((req) => req.resolve(newAccessToken));
         failedRequestsQueue = [];
+
         isRefreshing = false;
 
-        originalRequest.headers["Authorization"] = "Bearer " + newAccessToken;
+        originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
         return axiosInstance(originalRequest);
-
       } catch (err) {
         failedRequestsQueue.forEach((req) => req.reject(err));
         failedRequestsQueue = [];
@@ -82,7 +89,6 @@ axiosInstance.interceptors.response.use(
         return logoutAndRedirect(refreshToken);
       }
     }
-
     return Promise.reject(error);
   }
 );

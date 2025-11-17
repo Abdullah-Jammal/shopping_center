@@ -2,14 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { GetAllUsers } from "../api/getUsers";
-import { UsersResponse } from "../types/users";
-
-interface UseGetUsersProps {
-  page?: number;
-  pageSize?: number;
-  search?: string;
-  filterType?: string | null;
-}
+import { UseGetUsersProps, UsersResponse } from "../types/users";
 
 export function useGetUsers({
   page = 1,

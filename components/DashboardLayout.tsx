@@ -46,7 +46,7 @@ export function DashboardLayout({
               logoutAndRedirect(Cookies.get("refreshToken") ?? undefined)
             }
             className="flex items-center gap-2 text-red-600 border-red-300 hover:text-white hover:bg-red-600
-             transition-all duration-200 rounded-xs px-4 py-2 shadow-sm"
+             transition-all duration-200 rounded-xs px-4 py-2 shadow-sm cursor-pointer"
           >
             <LogOut className="w-4 h-4" />
             <span>تسجيل الخروج</span>
