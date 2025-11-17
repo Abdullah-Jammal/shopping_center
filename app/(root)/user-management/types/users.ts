@@ -20,14 +20,12 @@ export interface UsersResponse {
   };
 }
 
-
 export interface UseGetUsersProps {
   page?: number;
   pageSize?: number;
   search?: string;
   filterType?: string | null;
 }
-
 
 export interface GetAllUsersParams {
   page?: number;
