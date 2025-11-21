@@ -1,14 +1,15 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
+
 import {
   FormControl,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+
 import { Input } from "@/components/ui/input";
 
 interface FormInputProps {
@@ -24,10 +25,9 @@ export default function FormInput({
   label,
   type = "text",
   placeholder = "",
-  className,
+  className = "",
 }: FormInputProps) {
   const [showPassword, setShowPassword] = useState(false);
-
   const isPassword = type === "password";
 
   return (
@@ -46,7 +46,7 @@ export default function FormInput({
           {isPassword && (
             <button
               type="button"
-              onClick={() => setShowPassword((prev) => !prev)}
+              onClick={() => setShowPassword((p) => !p)}
               className="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-black"
             >
               {showPassword ? (
@@ -59,7 +59,7 @@ export default function FormInput({
         </div>
       </FormControl>
 
-      <FormMessage className="text-red-500" />
+      <FormMessage />
     </FormItem>
   );
 }

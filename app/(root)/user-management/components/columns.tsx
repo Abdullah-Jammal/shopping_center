@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
+import { DeleteUserButton } from "../components/DeleteUserButton";
 
 export const columns: ColumnDef<any>[] = [
   {
@@ -26,11 +28,20 @@ export const columns: ColumnDef<any>[] = [
     cell: ({ row }) => (
       <div className="flex gap-2">
         {row.original.roles?.map((role: string) => (
-          <Badge key={role} className="w-fit bg-orange-100/90 text-orange-500/90 px-3 py-1 shadow">
+          <Badge
+            key={role}
+            className="w-fit bg-orange-100/90 text-orange-500/90 px-3 py-1 shadow"
+          >
             {role}
           </Badge>
         ))}
       </div>
     ),
+  },
+
+  {
+    id: "actions",
+    header: "إجراءات",
+    cell: ({ row }) => <DeleteUserButton userId={row.original.id} />,
   },
 ];
