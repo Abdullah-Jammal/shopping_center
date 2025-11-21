@@ -49,7 +49,9 @@ export function AppSidebar() {
         >
           <SidebarGroup>
             <SidebarGroupLabel className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4 flex justify-between items-center">
-              {!collapsed && <div>الزيارة التفتيشية</div>}
+              {!collapsed && (
+                <div className="text-lg mb-1">جمعية رايبطة العلماء</div>
+              )}
 
               <SidebarTrigger
                 onClick={() => setCollapsed(!collapsed)}
