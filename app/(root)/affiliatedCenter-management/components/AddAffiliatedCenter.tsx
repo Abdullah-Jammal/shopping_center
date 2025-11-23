@@ -1,7 +1,163 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { PlusCircle } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Form, FormField } from "@/components/ui/form";
+import FormInput from "@/components/form/FormInput";
+import FormSelect from "@/components/form/FormSelect";
+import { useAddAffiliatedCenter } from "../hooks/useAddAffiliatedCenter";
+import {
+  addAffiliatedCenterSchema,
+  AddAffiliatedCenterSchema,
+} from "../schema/addAffiliatedCenterSchema";
+import { useGetHeadquarters } from "../../headquarter-management/hooks/useGetHeadquarters";
+import { useGetBranches } from "../../branch-management/hooks/useGetBranches";
 
 export const AddAffiliatedCenter = () => {
-  return <Button>إضافة مركز تابع</Button>;
+  const [open, setOpen] = useState(false);
+  const mutation = useAddAffiliatedCenter();
+
+  const { data: headquartersRes } = useGetHeadquarters({
+    pageNumber: 1,
+    pageSize: 200,
+    search: "",
+  });
+  const headquarters = headquartersRes?.data ?? [];
+
+  const { data: branchesRes } = useGetBranches({
+    pageNumber: 1,
+    pageSize: 200,
+    search: "",
+  });
+  const branches = branchesRes?.data ?? [];
+
+  const form = useForm<AddAffiliatedCenterSchema>({
+    resolver: zodResolver(addAffiliatedCenterSchema),
+    defaultValues: {
+      name: "",
+      headquarterId: null,
+      branchId: null,
+    },
+  });
+
+  const selectedHQ = form.watch("headquarterId");
+  const selectedBranch = form.watch("branchId");
+
+  useEffect(() => {
+    if (selectedHQ) {
+      form.setValue("branchId", null);
+    }
+  }, [selectedHQ, form]);
+
+  useEffect(() => {
+    if (selectedBranch) {
+      form.setValue("headquarterId", null);
+    }
+  }, [selectedBranch, form]);
+
+  const onSubmit = (values: AddAffiliatedCenterSchema) => {
+    mutation.mutate(values, {
+      onSuccess: () => {
+        form.reset();
+        setOpen(false);
+      },
+    });
+  };
+
+  const clearHQ = () => form.setValue("headquarterId", null);
+  const clearBranch = () => form.setValue("branchId", null);
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button className="flex items-center gap-2 cursor-pointer">
+          <PlusCircle className="w-4 h-4 mt-0.5" />
+          إضافة مركز تابع
+        </Button>
+      </DialogTrigger>
+
+      <DialogContent className="max-w-lg" dir="rtl">
+        <DialogHeader>
+          <DialogTitle className="text-lg font-bold">
+            إضافة مركز تابع
+          </DialogTitle>
+        </DialogHeader>
+
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="grid grid-cols-2 gap-4 mt-4"
+          >
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormInput
+                  field={field}
+                  label="اسم المركز"
+                  placeholder="أدخل اسم المركز"
+                />
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="headquarterId"
+              render={({ field }) => (
+                <FormSelect
+                  field={field}
+                  label="المقر"
+                  placeholder="اختر المقر"
+                  options={headquarters.map((hq: any) => ({
+                    value: hq.id,
+                    label: hq.name ?? "مقر بدون اسم",
+                  }))}
+                  disabled={!!selectedBranch}
+                  onClear={clearHQ}
+                />
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="branchId"
+              render={({ field }) => (
+                <FormSelect
+                  field={field}
+                  label="الفرع"
+                  placeholder="اختر الفرع"
+                  options={branches.map((b: any) => ({
+                    value: b.id,
+                    label: b.name,
+                  }))}
+                  disabled={!!selectedHQ}
+                  onClear={clearBranch}
+                />
+              )}
+            />
+
+            <div className="col-span-2">
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={mutation.isPending}
+              >
+                {mutation.isPending ? "جاري الحفظ..." : "حفظ المركز"}
+              </Button>
+            </div>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
+  );
 };

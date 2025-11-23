@@ -40,7 +40,7 @@ export default function FormInput({
             {...field}
             type={isPassword ? (showPassword ? "text" : "password") : type}
             placeholder={placeholder}
-            className={`text-right pr-10 ${className}`}
+            className={`text-right ${isPassword ? "pr-10" : ""} ${className}`}
           />
 
           {isPassword && (

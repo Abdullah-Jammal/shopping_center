@@ -19,13 +19,22 @@ import { addUserSchema, AddUserSchema } from "../schema/addUserSchema";
 import { useGetHeadquarters } from "../../headquarter-management/hooks/useGetHeadquarters";
 import { useGetBranches } from "../../branch-management/hooks/useGetBranches";
 import { useGetAffiliatedCenters } from "../../affiliatedCenter-management/hooks/useGetAffiliatedCenters";
+import { PlusCircle } from "lucide-react";
 
 export const AddUser = () => {
   const [open, setOpen] = useState(false);
   const mutation = useAddUser();
-  const { data: headquartersRes } = useGetHeadquarters();
+  const { data: headquartersRes } = useGetHeadquarters({
+    search: "",
+    pageNumber: 1,
+    pageSize: 200,
+  });
+  const { data: branchesRes } = useGetBranches({
+    search: "",
+    pageNumber: 1,
+    pageSize: 200,
+  });
   const headquarters = headquartersRes?.data ?? [];
-  const { data: branchesRes } = useGetBranches();
   const branches = branchesRes?.data ?? [];
   const { data: centersRes } = useGetAffiliatedCenters();
   const centers = centersRes?.data ?? [];
@@ -36,23 +45,18 @@ export const AddUser = () => {
       email: "",
       password: "",
       userType: "",
-      headquarterId: null,
-      branchId: null,
-      affiliatedCenterId: null,
+      headquarterId: "",
+      branchId: "",
+      affiliatedCenterId: "",
       phoneNumber: "",
       address: "",
     },
   });
 
   const userType = form.watch("userType");
-  const showHQ = [
-    "HeadquartersAdmin",
-    "BranchAdmin",
-    "AffiliatedCenterAdmin",
-  ].includes(userType);
-  const showBranch = ["BranchAdmin", "AffiliatedCenterAdmin"].includes(
-    userType
-  );
+
+  const showHQ = userType === "HeadquartersAdmin";
+  const showBranch = userType === "BranchAdmin";
   const showCenter = userType === "AffiliatedCenterAdmin";
 
   const onSubmit = (values: AddUserSchema) => {
@@ -67,10 +71,13 @@ export const AddUser = () => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="text-white px-6 py-2">إضافة مستخدم جديد</Button>
+        <Button className="text-white px-6 py-2 flex items-center gap-2 cursor-pointer">
+          <PlusCircle className="w-4 h-4 mt-0.5" />
+          إضافة مستخدم جديد
+        </Button>
       </DialogTrigger>
 
-      <DialogContent className="max-w-xl" dir="rtl">
+      <DialogContent className="w-[90%] md:w-[80%] max-w-[50%]!" dir="rtl">
         <DialogHeader>
           <DialogTitle className="text-lg font-bold">
             إضافة مستخدم جديد
@@ -86,7 +93,11 @@ export const AddUser = () => {
               control={form.control}
               name="fullName"
               render={({ field }) => (
-                <FormInput label="الاسم الكامل" field={field} />
+                <FormInput
+                  label="الاسم الكامل"
+                  field={field}
+                  placeholder="john doe"
+                />
               )}
             />
 
@@ -94,7 +105,11 @@ export const AddUser = () => {
               control={form.control}
               name="email"
               render={({ field }) => (
-                <FormInput label="البريد الإلكتروني" field={field} />
+                <FormInput
+                  label="البريد الإلكتروني"
+                  field={field}
+                  placeholder="example@gmail.com"
+                />
               )}
             />
 
@@ -116,11 +131,11 @@ export const AddUser = () => {
                   field={field}
                   options={[
                     { value: "SuperAdmin", label: "مدير النظام" },
-                    { value: "HeadquartersAdmin", label: "إدارة المقر" },
-                    { value: "BranchAdmin", label: "إدارة الفرع" },
+                    { value: "HeadquartersAdmin", label: "مدير مقر رئيسي" },
+                    { value: "BranchAdmin", label: "مدير فرع" },
                     {
                       value: "AffiliatedCenterAdmin",
-                      label: "إدارة المركز التابع",
+                      label: "مدير مركز تابع",
                     },
                     { value: "Accountant", label: "محاسب" },
                   ]}
@@ -134,7 +149,7 @@ export const AddUser = () => {
                 name="headquarterId"
                 render={({ field }) => (
                   <FormSelect
-                    label="المقر"
+                    label="المقر الرئيسي"
                     placeholder="اختر المقر"
                     field={field}
                     options={headquarters.map((hq: any) => ({
@@ -186,7 +201,11 @@ export const AddUser = () => {
               control={form.control}
               name="phoneNumber"
               render={({ field }) => (
-                <FormInput label="رقم الهاتف" field={field} />
+                <FormInput
+                  label="رقم الهاتف"
+                  field={field}
+                  placeholder="07*********"
+                />
               )}
             />
 
@@ -194,7 +213,7 @@ export const AddUser = () => {
               control={form.control}
               name="address"
               render={({ field }) => (
-                <FormInput label="العنوان" field={field} />
+                <FormInput label="العنوان" field={field} placeholder="BGW" />
               )}
             />
 

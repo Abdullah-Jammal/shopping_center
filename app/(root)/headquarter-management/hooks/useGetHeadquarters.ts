@@ -3,9 +3,17 @@
 import { useQuery } from "@tanstack/react-query";
 import { getHeadquarters } from "../api/getHeadquarters";
 
-export function useGetHeadquarters() {
+export function useGetHeadquarters({
+  search,
+  pageNumber,
+  pageSize,
+}: {
+  search: string;
+  pageNumber: number;
+  pageSize: number;
+}) {
   return useQuery({
-    queryKey: ["headquarters"],
-    queryFn: getHeadquarters,
+    queryKey: ["headquarters", search, pageNumber, pageSize],
+    queryFn: () => getHeadquarters({ search, pageNumber, pageSize }),
   });
 }

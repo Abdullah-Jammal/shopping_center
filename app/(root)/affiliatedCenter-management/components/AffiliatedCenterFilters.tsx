@@ -1,9 +1,23 @@
 "use client";
 
-export function AffiliatedCenterFilters() {
+import { Input } from "@/components/ui/input";
+
+export function AffiliatedCenterFilters({
+  search,
+  setSearch,
+}: {
+  search: string;
+  setSearch: (value: string) => void;
+}) {
   return (
-    <div className="p-2 border rounded-md bg-gray-50 text-gray-600">
-      لا يوجد مرشحات حالياً
+    <div>
+      <Input
+        type="text"
+        value={search}
+        placeholder="بحث عن مركز تابع..."
+        className="border rounded-md px-3 py-2 w-64 focus:outline-none"
+        onChange={(e) => setSearch(e.target.value)}
+      />
     </div>
   );
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { DataTable } from "@/components/tables/data-table";
 import { TableSkeleton } from "@/components/tables/TableSkeleton";
@@ -11,7 +12,15 @@ import { AddAffiliatedCenter } from "./components/AddAffiliatedCenter";
 import { useGetAffiliatedCenters } from "./hooks/useGetAffiliatedCenters";
 
 export default function AffiliatedCenterManagementPage() {
-  const { data, isLoading, isError, refetch } = useGetAffiliatedCenters();
+  const [search, setSearch] = useState("");
+  const [pageNumber, setPageNumber] = useState(1);
+  const pageSize = 10;
+
+  const { data, isLoading, isError, refetch } = useGetAffiliatedCenters({
+    search,
+    pageNumber,
+    pageSize,
+  });
 
   const centers = data?.data ?? [];
   const metadata = data?.metadata ?? {
@@ -26,8 +35,8 @@ export default function AffiliatedCenterManagementPage() {
       userName="System Super Admin"
       role="SuperAdmin"
     >
-      <div className="flex items-start justify-between flex-wrap gap-4">
-        <AffiliatedCenterFilters />
+      <div className="flex items-start justify-between flex-wrap gap-4 mb-4">
+        <AffiliatedCenterFilters search={search} setSearch={setSearch} />
         <AddAffiliatedCenter />
       </div>
 
