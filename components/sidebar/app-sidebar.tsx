@@ -45,7 +45,7 @@ export function AppSidebar() {
       >
         <SidebarContent
           dir="rtl"
-          className="text-right py-6 px-3 transition-all duration-300"
+          className="text-right py-6 px-3 transition-all duration-300 flex flex-col justify-between"
         >
           <SidebarGroup>
             <SidebarGroupLabel className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4 flex justify-between items-center">
@@ -97,6 +97,7 @@ export function AppSidebar() {
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
+          <p className="text-center text-gray-400">version 0.01</p>
         </SidebarContent>
       </Sidebar>
     </div>
