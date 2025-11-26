@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { logoutAndRedirect } from "@/app/(auth)/login/api/logout";
@@ -9,6 +8,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export const axiosInstance = axios.create({
   baseURL: BASE_URL,
+  withCredentials: true,
   headers: {
     "Content-Type": "application/json",
   },
@@ -62,9 +62,8 @@ axiosInstance.interceptors.response.use(
           `${BASE_URL}/Auth/refresh-token`,
           { refreshToken },
           {
-            headers: {
-              "Content-Type": "application/json",
-            },
+            withCredentials: true,
+            headers: { "Content-Type": "application/json" },
           }
         );
 

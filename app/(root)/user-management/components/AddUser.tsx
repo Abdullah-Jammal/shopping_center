@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -60,7 +61,14 @@ export const AddUser = () => {
   const showCenter = userType === "AffiliatedCenterAdmin";
 
   const onSubmit = (values: AddUserSchema) => {
-    mutation.mutate(values, {
+    const payload = {
+      ...values,
+      headquarterId: values.headquarterId || undefined,
+      branchId: values.branchId || undefined,
+      affiliatedCenterId: values.affiliatedCenterId || undefined,
+    };
+
+    mutation.mutate(payload, {
       onSuccess: () => {
         form.reset();
         setOpen(false);
@@ -78,6 +86,9 @@ export const AddUser = () => {
       </DialogTrigger>
 
       <DialogContent className="w-[90%] md:w-[80%] max-w-[50%]!" dir="rtl">
+        <DialogDescription className="mb-2 hidden">
+          يرجى ملء النموذج أدناه لإضافة مستخدم جديد إلى النظام.
+        </DialogDescription>
         <DialogHeader>
           <DialogTitle className="text-lg font-bold">
             إضافة مستخدم جديد
@@ -220,7 +231,7 @@ export const AddUser = () => {
             <div className="col-span-2 mt-4">
               <Button
                 type="submit"
-                className="w-full"
+                className="w-full cursor-pointer"
                 disabled={mutation.isPending}
               >
                 {mutation.isPending ? "جاري الحفظ..." : "حفظ المستخدم"}

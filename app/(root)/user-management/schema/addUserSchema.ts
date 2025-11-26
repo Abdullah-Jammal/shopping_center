@@ -6,9 +6,9 @@ export const addUserSchema = z.object({
   fullName: z.string().min(2, "Full name is required"),
   userType: z.string(),
 
-  headquarterId: z.string().uuid().nullable().optional(),
-  branchId: z.string().uuid().nullable().optional(),
-  affiliatedCenterId: z.string().uuid().nullable().optional(),
+  headquarterId: z.union([z.string().uuid(), z.literal("")]).optional(),
+  branchId: z.union([z.string().uuid(), z.literal("")]).optional(),
+  affiliatedCenterId: z.union([z.string().uuid(), z.literal("")]).optional(),
 
   address: z.string().nullable().optional(),
   phoneNumber: z.string().nullable().optional(),

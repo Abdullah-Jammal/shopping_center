@@ -66,7 +66,13 @@ export const AddAffiliatedCenter = () => {
   }, [selectedBranch, form]);
 
   const onSubmit = (values: AddAffiliatedCenterSchema) => {
-    mutation.mutate(values, {
+    const payload: AddAffiliatedCenterSchema = {
+      name: values.name,
+      headquarterId: values.headquarterId || undefined,
+      branchId: values.branchId || undefined,
+    };
+
+    mutation.mutate(payload, {
       onSuccess: () => {
         form.reset();
         setOpen(false);
@@ -149,7 +155,7 @@ export const AddAffiliatedCenter = () => {
             <div className="col-span-2">
               <Button
                 type="submit"
-                className="w-full"
+                className="w-full cursor-pointer"
                 disabled={mutation.isPending}
               >
                 {mutation.isPending ? "جاري الحفظ..." : "حفظ المركز"}
