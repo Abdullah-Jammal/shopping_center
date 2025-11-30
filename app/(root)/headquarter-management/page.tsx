@@ -5,7 +5,6 @@ import { DashboardLayout } from "@/components/DashboardLayout";
 import { DataTable } from "@/components/tables/data-table";
 import { TableSkeleton } from "@/components/tables/TableSkeleton";
 import { ErrorState } from "@/components/ErrorState";
-
 import { columns } from "./components/columns";
 import { HeadquarterFilters } from "./components/HeadquarterFilters";
 import { AddHeadquarter } from "./components/AddHeadquarter";

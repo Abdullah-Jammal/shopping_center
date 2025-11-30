@@ -1,8 +1,9 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 import { DeleteUserButton } from "../components/DeleteUserButton";
+import { UserManagementProps } from "../types/users";
 
-export const columns: ColumnDef<any>[] = [
+export const columns: ColumnDef<UserManagementProps>[] = [
   {
     accessorKey: "fullName",
     header: "الاسم الكامل",
@@ -16,10 +17,6 @@ export const columns: ColumnDef<any>[] = [
     accessorKey: "phoneNumber",
     header: "رقم الهاتف",
     cell: ({ row }) => row.original.phoneNumber || "—",
-  },
-  {
-    accessorKey: "entityType",
-    header: "نوع المستخدم",
   },
   {
     accessorKey: "roles",

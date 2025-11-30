@@ -1,7 +1,12 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
+import {
+  AffiliatedCenter,
+  HeadquarterProps,
+  Branches,
+} from "../types/Headquarter";
 
-export const columns: ColumnDef<any>[] = [
+export const columns: ColumnDef<HeadquarterProps>[] = [
   {
     accessorKey: "name",
     header: "اسم المقر",
@@ -13,9 +18,9 @@ export const columns: ColumnDef<any>[] = [
     cell: ({ row }) => (
       <div className="flex flex-wrap gap-2">
         {row.original.branches?.length ? (
-          row.original.branches.map((branch: any) => (
+          row.original.branches.map((branch: Branches, key) => (
             <Badge
-              key={branch.id}
+              key={key}
               className="bg-blue-100 text-blue-600 px-3 py-1 rounded-md shadow"
             >
               {branch.name}
@@ -33,14 +38,16 @@ export const columns: ColumnDef<any>[] = [
     cell: ({ row }) => (
       <div className="flex flex-wrap gap-2">
         {row.original.affiliatedCenters?.length ? (
-          row.original.affiliatedCenters.map((center: any) => (
-            <Badge
-              key={center.id}
-              className="bg-purple-100 text-purple-600 px-3 py-1 rounded-md shadow"
-            >
-              {center.name ?? "مركز بدون اسم"}
-            </Badge>
-          ))
+          row.original.affiliatedCenters.map(
+            (center: AffiliatedCenter, index: number) => (
+              <Badge
+                key={index}
+                className="bg-purple-100 text-purple-600 px-3 py-1 rounded-md shadow"
+              >
+                {center.name ?? "مركز بدون اسم"}
+              </Badge>
+            )
+          )
         ) : (
           <span className="text-gray-400">—</span>
         )}

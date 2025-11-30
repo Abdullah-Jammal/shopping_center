@@ -97,7 +97,7 @@ export function AppSidebar() {
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
-          <p className="text-center text-gray-400 text-xs">version 0.03</p>
+          <p className="text-center text-gray-400 text-xs">version 0.04</p>
         </SidebarContent>
       </Sidebar>
     </div>

@@ -33,3 +33,11 @@ export interface UseGetUsersProps {
   search?: string;
   filterType?: string | null;
 }
+
+export interface UserManagementProps {
+  id: string;
+  fullName: string;
+  email: string;
+  phoneNumber: string;
+  roles: string[];
+}
