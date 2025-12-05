@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
 import { DataTable } from "@/components/tables/data-table";
 import { useGetUsers } from "./hooks/useGetUsers";
 import { columns } from "./components/columns";
@@ -9,31 +8,36 @@ import { AddUser } from "./components/AddUser/AddUser";
 import { UserManagementFilters } from "./components/UserMnagementFilters";
 import { ErrorState } from "@/components/ErrorState";
 import { TableSkeleton } from "@/components/tables/TableSkeleton";
-import { ReusablePagination } from "@/components/pagination/ReusablePagination";
-import { useUsersFilters } from "@/store/user-management/useUsersFilters";
-import { useUsersPagination } from "./hooks/store/useUsersPagination";
-
+import { useUsersPagination } from "@/store/user-management/useUsersPagination";
+import { DataTablePagination } from "@/components/tables/DataTablePagination";
+import { useEffect } from "react";
 export default function UsersPage() {
-  const { search, filterType } = useUsersFilters();
-  const { setTotalPages } = useUsersPagination();
-
+  const {
+    pageNumber,
+    totalPages,
+    setPageNumber,
+    search,
+    filterType,
+    pageSize,
+    setTotalPages,
+  } = useUsersPagination();
   const { data, isLoading, isError, refetch } = useGetUsers({
     search,
     filterType,
+    pageNumber,
+    pageSize,
   });
 
   const users = data?.data ?? [];
   const metadata = data?.metadata;
-
-  // FIXED: No infinite loop
   useEffect(() => {
-    if (metadata?.totalPages != null) {
-      setTotalPages(metadata.totalPages);
+    if (data?.metadata?.totalPages) {
+      setTotalPages(data.metadata.totalPages);
     }
-  }, [metadata?.totalPages, setTotalPages]);
+  }, [data?.metadata?.totalPages]);
 
   return (
-    <DashboardLayout title="إدارة المستخدمين">
+    <DashboardLayout title="User Management">
       <div className="flex justify-between items-start gap-4">
         <UserManagementFilters />
         <AddUser />
@@ -46,7 +50,11 @@ export default function UsersPage() {
       ) : (
         <>
           <DataTable columns={columns} data={users} metadata={metadata} />
-          <ReusablePagination />
+          <DataTablePagination
+            pageNumber={pageNumber}
+            totalPages={totalPages}
+            onPageChange={(p) => setPageNumber(p)}
+          />
         </>
       )}
     </DashboardLayout>

@@ -8,10 +8,10 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
-import { useUsersFilters } from "@/store/user-management/useUsersFilters";
+import { useUsersPagination } from "@/store/user-management/useUsersPagination";
 
 export const UserManagementFilters = () => {
-  const { search, setSearch, setFilterType } = useUsersFilters();
+  const { search, setSearch, setFilterType } = useUsersPagination();
   return (
     <div className="flex gap-3 flex-wrap mb-8">
       <Input

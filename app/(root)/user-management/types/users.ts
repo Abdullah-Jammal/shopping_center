@@ -17,7 +17,7 @@ export interface UsersResponse {
 }
 
 export interface GetAllUsersParams {
-  page?: number;
+  pageNumber?: number;
   pageSize?: number;
   search?: string;
   filterType?: string | null;

@@ -1,8 +1,5 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useGetHeadquarters } from "./hooks/useGetHeadquarters";
-import { ReusablePagination } from "@/components/pagination/ReusablePagination";
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { DataTable } from "@/components/tables/data-table";
 import { TableSkeleton } from "@/components/tables/TableSkeleton";
@@ -10,16 +7,25 @@ import { ErrorState } from "@/components/ErrorState";
 import { HeadquarterFilters } from "./components/HeadquarterFilters";
 import { AddHeadquarter } from "./components/AddHeadquarter";
 import { columns } from "./components/columns";
-import { useHeadquarterPagination } from "@/store/pagination/useHeadquarterPagination";
+import { useGetHeadquarters } from "./hooks/useGetHeadquarters";
+import { DataTablePagination } from "@/components/tables/DataTablePagination";
+import { useHeadquarterPagination } from "@/store/headquarter-management/useHeadquarterPagination";
+import { useEffect } from "react";
 
 export default function HeadquarterManagementPage() {
-  const [search, setSearch] = useState("");
-
-  const { page, pageSize, setTotalPages } = useHeadquarterPagination();
+  const {
+    search,
+    pageNumber,
+    pageSize,
+    totalPages,
+    setSearch,
+    setPageNumber,
+    setTotalPages,
+  } = useHeadquarterPagination();
 
   const { data, isLoading, isError, refetch } = useGetHeadquarters({
     search,
-    pageNumber: page,
+    pageNumber,
     pageSize,
   });
 
@@ -30,7 +36,7 @@ export default function HeadquarterManagementPage() {
     if (metadata?.totalPages) {
       setTotalPages(metadata.totalPages);
     }
-  }, [metadata, setTotalPages]);
+  }, [metadata?.totalPages]);
 
   return (
     <DashboardLayout
@@ -57,7 +63,11 @@ export default function HeadquarterManagementPage() {
               metadata={metadata}
             />
 
-            <ReusablePagination pagination={useHeadquarterPagination()} />
+            <DataTablePagination
+              pageNumber={pageNumber}
+              totalPages={totalPages}
+              onPageChange={(p) => setPageNumber(p)}
+            />
           </>
         )}
       </div>

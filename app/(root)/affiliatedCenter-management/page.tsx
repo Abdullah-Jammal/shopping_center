@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { DataTable } from "@/components/tables/data-table";
 import { TableSkeleton } from "@/components/tables/TableSkeleton";
@@ -9,24 +8,39 @@ import { columns } from "./components/columns";
 import { AffiliatedCenterFilters } from "./components/AffiliatedCenterFilters";
 import { AddAffiliatedCenter } from "./components/AddAffiliatedCenter";
 import { useGetAffiliatedCenters } from "./hooks/useGetAffiliatedCenters";
-import { ReusablePagination } from "@/components/pagination/ReusablePagination";
-import { useAffiliatedCenterPagination } from "@/store/pagination/useAffiliatedCenterPagination";
+import { DataTablePagination } from "@/components/tables/DataTablePagination";
+import { useAffiliatedCentersPagination } from "@/store/affiliated-center-management/useAffiliatedCentersPagination";
+import { useEffect } from "react";
 
 export default function AffiliatedCenterManagementPage() {
-  const [search, setSearch] = useState("");
-  const { page, pageSize, setTotalPages } = useAffiliatedCenterPagination();
+  const {
+    search,
+    headquarterId,
+    branchId,
+    pageNumber,
+    pageSize,
+    totalPages,
+    setSearch,
+    setPageNumber,
+    setTotalPages,
+  } = useAffiliatedCentersPagination();
 
   const { data, isLoading, isError, refetch } = useGetAffiliatedCenters({
     search,
-    page,
+    headquarterId,
+    branchId,
+    pageNumber,
     pageSize,
   });
 
   const centers = data?.data ?? [];
-  const metadata = data?.metadata ?? {
-    totalRecords: centers.length,
-    totalPages: 1,
-  };
+  const metadata = data?.metadata;
+
+  useEffect(() => {
+    if (metadata?.totalPages) {
+      setTotalPages(metadata.totalPages);
+    }
+  }, [metadata?.totalPages]);
 
   return (
     <DashboardLayout
@@ -47,7 +61,12 @@ export default function AffiliatedCenterManagementPage() {
       ) : (
         <>
           <DataTable columns={columns} data={centers} metadata={metadata} />
-          <ReusablePagination pagination={useAffiliatedCenterPagination()} />
+
+          <DataTablePagination
+            pageNumber={pageNumber}
+            totalPages={totalPages}
+            onPageChange={(p) => setPageNumber(p)}
+          />
         </>
       )}
     </DashboardLayout>

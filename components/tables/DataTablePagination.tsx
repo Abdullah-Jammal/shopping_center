@@ -7,36 +7,38 @@ import {
   ChevronsRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { DataTablePaginationProps } from "@/types/DataTablePaginationProps";
 
-export function DataTablePagination<TData>({
-  table,
-}: DataTablePaginationProps<TData>) {
-  const page = table.getState().pagination.pageIndex;
-  const pageCount = table.getPageCount();
+interface DataTablePaginationProps {
+  pageNumber: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+}
 
+export function DataTablePagination({
+  pageNumber,
+  totalPages,
+  onPageChange,
+}: DataTablePaginationProps) {
   const getPageNumbers = () => {
     const pages: (number | string)[] = [];
 
-    if (pageCount <= 7) {
-      for (let i = 0; i < pageCount; i++) pages.push(i);
+    if (totalPages <= 7) {
+      for (let i = 1; i <= totalPages; i++) pages.push(i);
       return pages;
     }
 
-    pages.push(0);
-    pages.push(1);
+    pages.push(1, 2);
 
-    if (page > 3) pages.push("...");
+    if (pageNumber > 4) pages.push("...");
 
-    const start = Math.max(2, page - 1);
-    const end = Math.min(pageCount - 3, page + 1);
+    const start = Math.max(3, pageNumber - 1);
+    const end = Math.min(totalPages - 2, pageNumber + 1);
 
     for (let i = start; i <= end; i++) pages.push(i);
 
-    if (page < pageCount - 4) pages.push("...");
+    if (pageNumber < totalPages - 3) pages.push("...");
 
-    pages.push(pageCount - 2);
-    pages.push(pageCount - 1);
+    pages.push(totalPages - 1, totalPages);
 
     return pages;
   };
@@ -44,65 +46,65 @@ export function DataTablePagination<TData>({
   const pages = getPageNumbers();
 
   return (
-    <div className="flex items-center justify-start px-2 py-4" dir="ltr">
+    <div className="flex items-center justify-end px-2 py-4" dir="rtl">
       <div className="flex items-center space-x-2">
         <Button
-          variant="outline"
+          variant="secondary"
           size="icon"
           className="size-8"
-          onClick={() => table.setPageIndex(0)}
-          disabled={!table.getCanPreviousPage()}
+          onClick={() => onPageChange(1)}
+          disabled={pageNumber === 1}
         >
-          <ChevronsLeft />
+          <ChevronsRight />
         </Button>
 
         <Button
-          variant="outline"
+          variant="secondary"
           size="icon"
           className="size-8"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
+          onClick={() => onPageChange(pageNumber - 1)}
+          disabled={pageNumber === 1}
         >
-          <ChevronLeft />
+          <ChevronRight />
         </Button>
 
         {pages.map((p, index) =>
           p === "..." ? (
-            <span key={index} className="px-2 text-gray-400 select-none">
+            <span key={index} className="px-2 text-gray-400">
               ...
             </span>
           ) : (
             <Button
               key={index}
-              variant={p === page ? "default" : "outline"}
+              variant={p === pageNumber ? "default" : "secondary"}
               className={`size-8 ${
-                p === page ? "bg-main-color text-white hover:bg-main-color" : ""
+                p === pageNumber ? "bg-primary text-white" : ""
               }`}
-              onClick={() => table.setPageIndex(p as number)}
+              onClick={() => onPageChange(p as number)}
             >
-              {Number(p) + 1}
+              {p}
             </Button>
           )
         )}
 
         <Button
-          variant="outline"
+          variant="secondary"
           size="icon"
           className="size-8"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
+          onClick={() => onPageChange(pageNumber + 1)}
+          disabled={pageNumber === totalPages}
         >
-          <ChevronRight />
+          <ChevronLeft />
         </Button>
 
         <Button
-          variant="outline"
+          variant="secondary"
           size="icon"
           className="size-8"
-          onClick={() => table.setPageIndex(pageCount - 1)}
-          disabled={!table.getCanNextPage()}
+          onClick={() => onPageChange(totalPages)}
+          disabled={pageNumber === totalPages}
         >
-          <ChevronsRight />
+          <ChevronsLeft />
         </Button>
       </div>
     </div>

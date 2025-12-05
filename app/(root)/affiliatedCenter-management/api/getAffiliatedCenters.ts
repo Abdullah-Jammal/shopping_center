@@ -2,13 +2,13 @@ import { axiosInstance } from "@/lib/axios";
 
 export async function getAffiliatedCenters({
   search,
-  page,
+  pageNumber,
   pageSize,
   headquarterId,
   branchId,
 }: {
   search: string;
-  page: number;
+  pageNumber: number;
   pageSize: number;
   headquarterId?: string | null;
   branchId?: string | null;
@@ -19,7 +19,7 @@ export async function getAffiliatedCenters({
   if (headquarterId) qs.set("HeadquarterId", headquarterId);
   if (branchId) qs.set("BranchId", branchId);
 
-  qs.set("PageNumber", String(page));
+  qs.set("PageNumber", String(pageNumber));
   qs.set("PageSize", String(pageSize));
 
   const res = await axiosInstance.get(`/AffiliatedCenters?${qs.toString()}`);

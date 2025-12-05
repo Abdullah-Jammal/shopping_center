@@ -35,7 +35,7 @@ export const AddAffiliatedCenter = () => {
   const headquarters = headquartersRes?.data ?? [];
 
   const { data: branchesRes } = useGetBranches({
-    page: 1,
+    pageNumber: 1,
     pageSize: 200,
     search: "",
   });

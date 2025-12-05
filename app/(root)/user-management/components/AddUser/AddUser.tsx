@@ -40,7 +40,8 @@ export const AddUser = () => {
       ?.data ?? [];
 
   const branchesData =
-    useGetBranches({ search: "", page: 1, pageSize: 200 }).data?.data ?? [];
+    useGetBranches({ search: "", pageNumber: 1, pageSize: 200 }).data?.data ??
+    [];
 
   const centersData = useGetAffiliatedCenters().data?.data ?? [];
 

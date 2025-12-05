@@ -15,5 +15,6 @@ export function useGetHeadquarters({
   return useQuery({
     queryKey: ["headquarters", search, pageNumber, pageSize],
     queryFn: () => getHeadquarters({ search, pageNumber, pageSize }),
+    placeholderData: (prev) => prev,
   });
 }

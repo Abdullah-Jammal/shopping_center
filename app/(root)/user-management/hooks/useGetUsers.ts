@@ -1,30 +1,28 @@
 import { useQuery } from "@tanstack/react-query";
 import { GetAllUsers } from "../api/getUsers";
 import { UsersResponse } from "../types/users";
-import { useUserPagination } from "@/store/pagination/useUserPagination";
 
 export function useGetUsers({
   search,
   filterType,
+  pageNumber,
+  pageSize,
 }: {
   search: string;
   filterType: string | null;
+  pageNumber: number;
+  pageSize: number;
 }) {
-  const { page, pageSize, setTotalPages } = useUserPagination();
-
   return useQuery<UsersResponse>({
-    queryKey: ["users", page, pageSize, search, filterType],
+    queryKey: ["users", search, filterType, pageNumber, pageSize],
 
     queryFn: async () => {
       const res = await GetAllUsers({
-        page,
-        pageSize,
         search,
         filterType,
+        pageNumber,
+        pageSize,
       });
-
-      setTotalPages(res.metadata.totalPages);
-
       return res;
     },
 

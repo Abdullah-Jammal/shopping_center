@@ -5,15 +5,21 @@ import { getBranches } from "../api/getBranches";
 
 export function useGetBranches({
   search,
-  page,
+  pageNumber,
   pageSize,
 }: {
   search: string;
-  page: number;
+  pageNumber: number;
   pageSize: number;
 }) {
   return useQuery({
-    queryKey: ["branches", search, page, pageSize],
-    queryFn: () => getBranches({ search, page, pageSize }),
+    queryKey: ["branches", search, pageNumber, pageSize],
+    queryFn: () =>
+      getBranches({
+        search,
+        pageNumber,
+        pageSize,
+      }),
+    placeholderData: (prev) => prev,
   });
 }
