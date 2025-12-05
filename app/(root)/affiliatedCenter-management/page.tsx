@@ -5,20 +5,20 @@ import { DashboardLayout } from "@/components/DashboardLayout";
 import { DataTable } from "@/components/tables/data-table";
 import { TableSkeleton } from "@/components/tables/TableSkeleton";
 import { ErrorState } from "@/components/ErrorState";
-
 import { columns } from "./components/columns";
 import { AffiliatedCenterFilters } from "./components/AffiliatedCenterFilters";
 import { AddAffiliatedCenter } from "./components/AddAffiliatedCenter";
 import { useGetAffiliatedCenters } from "./hooks/useGetAffiliatedCenters";
+import { ReusablePagination } from "@/components/pagination/ReusablePagination";
+import { useAffiliatedCenterPagination } from "@/store/pagination/useAffiliatedCenterPagination";
 
 export default function AffiliatedCenterManagementPage() {
   const [search, setSearch] = useState("");
-  const [pageNumber, setPageNumber] = useState(1);
-  const pageSize = 10;
+  const { page, pageSize, setTotalPages } = useAffiliatedCenterPagination();
 
   const { data, isLoading, isError, refetch } = useGetAffiliatedCenters({
     search,
-    pageNumber,
+    page,
     pageSize,
   });
 
@@ -45,7 +45,10 @@ export default function AffiliatedCenterManagementPage() {
       ) : isLoading ? (
         <TableSkeleton rows={6} columns={columns.length} />
       ) : (
-        <DataTable columns={columns} data={centers} metadata={metadata} />
+        <>
+          <DataTable columns={columns} data={centers} metadata={metadata} />
+          <ReusablePagination pagination={useAffiliatedCenterPagination()} />
+        </>
       )}
     </DashboardLayout>
   );

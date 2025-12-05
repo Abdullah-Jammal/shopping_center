@@ -9,15 +9,16 @@ import { columns } from "./components/columns";
 import { BranchFilters } from "./components/BranchFilters";
 import { AddBranch } from "./components/AddBranch";
 import { useGetBranches } from "./hooks/useGetBranches";
+import { ReusablePagination } from "@/components/pagination/ReusablePagination";
+import { useBranchPagination } from "@/store/pagination/useBranchPagination";
 
 export default function BranchManagementPage() {
   const [search, setSearch] = useState("");
-  const [pageNumber, setPageNumber] = useState(1);
-  const pageSize = 10;
+  const { page, pageSize, setTotalPages } = useBranchPagination();
 
   const { data, isLoading, isError, refetch } = useGetBranches({
     search,
-    pageNumber,
+    page,
     pageSize,
   });
 
@@ -45,7 +46,10 @@ export default function BranchManagementPage() {
         ) : isLoading ? (
           <TableSkeleton rows={6} columns={columns.length} />
         ) : (
-          <DataTable columns={columns} data={branches} metadata={metadata} />
+          <>
+            <DataTable columns={columns} data={branches} metadata={metadata} />
+            <ReusablePagination pagination={useBranchPagination()} />
+          </>
         )}
       </div>
     </DashboardLayout>

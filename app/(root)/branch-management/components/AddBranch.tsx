@@ -95,6 +95,7 @@ export const AddBranch = () => {
                   label="المقر الرئيسي"
                   placeholder="اختر المقر"
                   field={field}
+                  onClear={() => field.onChange("")}
                   options={headquarters.map((hq: any) => ({
                     value: hq.id,
                     label: hq.name ?? "مقر بدون اسم",

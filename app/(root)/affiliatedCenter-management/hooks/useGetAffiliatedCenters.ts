@@ -5,7 +5,7 @@ import { getAffiliatedCenters } from "../api/getAffiliatedCenters";
 
 export function useGetAffiliatedCenters({
   search = "",
-  pageNumber = 1,
+  page = 1,
   pageSize = 10,
   headquarterId = "",
   branchId = "",
@@ -14,7 +14,7 @@ export function useGetAffiliatedCenters({
     queryKey: [
       "affiliatedCenters",
       search,
-      pageNumber,
+      page,
       pageSize,
       headquarterId,
       branchId,
@@ -22,7 +22,7 @@ export function useGetAffiliatedCenters({
     queryFn: () =>
       getAffiliatedCenters({
         search,
-        pageNumber,
+        page,
         pageSize,
         headquarterId,
         branchId,

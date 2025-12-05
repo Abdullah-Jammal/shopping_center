@@ -50,7 +50,7 @@ export function AppSidebar() {
           <SidebarGroup>
             <SidebarGroupLabel className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4 flex justify-between items-center">
               {!collapsed && (
-                <div className="text-lg mb-1">جمعية رايبطة العلماء</div>
+                <div className="text-lg mb-1">جمعية رابطة العلماء</div>
               )}
 
               <SidebarTrigger
@@ -97,7 +97,7 @@ export function AppSidebar() {
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
-          <p className="text-center text-gray-400 text-xs">version 0.04</p>
+          <p className="text-center text-gray-400 text-xs">version 0.05</p>
         </SidebarContent>
       </Sidebar>
     </div>

@@ -28,7 +28,6 @@ export function DashboardLayout({
 
         <div className="flex items-center justify-between flex-wrap gap-12 p-4 rounded-xs bg-white">
           <div className="flex items-center gap-4">
-
             <div className="flex flex-col">
               <span className="font-semibold text-gray-800 text-sm">
                 {userName}

@@ -1,22 +1,18 @@
+import { UseFormReturn } from "react-hook-form";
+import { AddUserSchema } from "../schema/addUserSchema";
+
 export interface User {
   id: string;
-  fullName: string;
+  name: string;
   email: string;
-  phoneNumber: string | null;
-  entityType: string;
-  heaqquarterId: string | null;
   roles: string[];
 }
 
 export interface UsersResponse {
   data: User[];
   metadata: {
-    currentPage: number;
-    pageSize: number;
-    totalCount: number;
     totalPages: number;
-    hasNext: boolean;
-    hasPrevious: boolean;
+    totalRecords: number;
   };
 }
 
@@ -27,11 +23,8 @@ export interface GetAllUsersParams {
   filterType?: string | null;
 }
 
-export interface UseGetUsersProps {
-  page?: number;
-  pageSize?: number;
-  search?: string;
-  filterType?: string | null;
+export interface UserBasicFieldsProps {
+  form: UseFormReturn<AddUserSchema>;
 }
 
 export interface UserManagementProps {

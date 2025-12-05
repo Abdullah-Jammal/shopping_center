@@ -1,8 +1,8 @@
 "use client";
 
-import { logoutAndRedirect } from "@/app/(auth)/login/api/logout";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { logoutAndRedirect } from "@/app/(auth)/login/api/logout";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -14,25 +14,34 @@ export const axiosInstance = axios.create({
   },
 });
 
-axiosInstance.interceptors.request.use(
-  (config) => {
-    const accessToken = Cookies.get("token");
-    if (accessToken) {
-      config.headers["Authorization"] = `Bearer ${accessToken}`;
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
+axiosInstance.interceptors.request.use((config) => {
+  const token = Cookies.get("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
 
 let isRefreshing = false;
-let failedRequestsQueue: any[] = [];
+let failedQueue: any[] = [];
+
+const processQueue = (error: any, token: string | null = null) => {
+  failedQueue.forEach((prom) => {
+    if (error) prom.reject(error);
+    else prom.resolve(token);
+  });
+
+  failedQueue = [];
+};
 
 axiosInstance.interceptors.response.use(
-  (response) => response,
-
+  (res) => res,
   async (error) => {
+    console.log("❌ Interceptor caught error:", error.config?.url);
+    console.log("Status:", error.response?.status);
+
     const originalRequest = error.config;
+
     if (!originalRequest) return Promise.reject(error);
 
     if (error.response?.status === 401 && !originalRequest._retry) {
@@ -41,15 +50,16 @@ axiosInstance.interceptors.response.use(
       const refreshToken = Cookies.get("refreshToken");
 
       if (!refreshToken) {
-        return logoutAndRedirect(refreshToken);
+        logoutAndRedirect();
+        return Promise.reject(error);
       }
 
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
-          failedRequestsQueue.push({ resolve, reject });
+          failedQueue.push({ resolve, reject });
         })
-          .then((token) => {
-            originalRequest.headers["Authorization"] = `Bearer ${token}`;
+          .then((newToken) => {
+            originalRequest.headers.Authorization = `Bearer ${newToken}`;
             return axiosInstance(originalRequest);
           })
           .catch((err) => Promise.reject(err));
@@ -61,33 +71,33 @@ axiosInstance.interceptors.response.use(
         const { data } = await axios.post(
           `${BASE_URL}/Auth/refresh-token`,
           { refreshToken },
-          {
-            withCredentials: true,
-            headers: { "Content-Type": "application/json" },
-          }
+          { headers: { "Content-Type": "application/json" } }
         );
 
-        const newAccessToken = data.token;
+        const newToken = data.token;
         const newRefreshToken = data.refreshToken;
 
-        Cookies.set("token", newAccessToken);
+        Cookies.set("token", newToken);
         Cookies.set("refreshToken", newRefreshToken);
+        Cookies.set("expiresAt", data.expiresAt);
+        Cookies.set("refreshTokenExpiresAt", data.refreshTokenExpiresAt);
+        Cookies.set("sessionExpiresAt", data.sessionExpiresAt);
 
-        failedRequestsQueue.forEach((req) => req.resolve(newAccessToken));
-        failedRequestsQueue = [];
+        processQueue(null, newToken);
 
         isRefreshing = false;
 
-        originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
+        originalRequest.headers.Authorization = `Bearer ${newToken}`;
         return axiosInstance(originalRequest);
       } catch (err) {
-        failedRequestsQueue.forEach((req) => req.reject(err));
-        failedRequestsQueue = [];
+        processQueue(err, null);
         isRefreshing = false;
 
-        return logoutAndRedirect(refreshToken);
+        logoutAndRedirect();
+        return Promise.reject(err);
       }
     }
+
     return Promise.reject(error);
   }
 );

@@ -1,36 +1,41 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useGetHeadquarters } from "./hooks/useGetHeadquarters";
+import { ReusablePagination } from "@/components/pagination/ReusablePagination";
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { DataTable } from "@/components/tables/data-table";
 import { TableSkeleton } from "@/components/tables/TableSkeleton";
 import { ErrorState } from "@/components/ErrorState";
-import { columns } from "./components/columns";
 import { HeadquarterFilters } from "./components/HeadquarterFilters";
 import { AddHeadquarter } from "./components/AddHeadquarter";
-import { useGetHeadquarters } from "./hooks/useGetHeadquarters";
+import { columns } from "./components/columns";
+import { useHeadquarterPagination } from "@/store/pagination/useHeadquarterPagination";
 
 export default function HeadquarterManagementPage() {
   const [search, setSearch] = useState("");
-  const [pageNumber, setPageNumber] = useState(1);
-  const pageSize = 10;
+
+  const { page, pageSize, setTotalPages } = useHeadquarterPagination();
 
   const { data, isLoading, isError, refetch } = useGetHeadquarters({
     search,
-    pageNumber,
+    pageNumber: page,
     pageSize,
   });
 
   const headquarters = data?.data ?? [];
-  const metadata = data?.metadata ?? {
-    totalPages: 1,
-    totalRecords: headquarters.length,
-  };
+  const metadata = data?.metadata;
+
+  useEffect(() => {
+    if (metadata?.totalPages) {
+      setTotalPages(metadata.totalPages);
+    }
+  }, [metadata, setTotalPages]);
 
   return (
     <DashboardLayout
       title="إدارة المقرات الرئيسية"
-      subtitle="عرض وإدارة جميع المقرات الرئيسية"
+      subtitle="عرض وإدارة جميع المقرات"
       userName="System Super Admin"
       role="SuperAdmin"
     >
@@ -45,11 +50,15 @@ export default function HeadquarterManagementPage() {
         ) : isError ? (
           <ErrorState onRetry={refetch} />
         ) : (
-          <DataTable
-            columns={columns}
-            data={headquarters}
-            metadata={metadata}
-          />
+          <>
+            <DataTable
+              columns={columns}
+              data={headquarters}
+              metadata={metadata}
+            />
+
+            <ReusablePagination pagination={useHeadquarterPagination()} />
+          </>
         )}
       </div>
     </DashboardLayout>

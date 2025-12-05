@@ -4,17 +4,17 @@ import { axiosInstance } from "@/lib/axios";
 
 export async function getBranches({
   search,
-  pageNumber,
+  page,
   pageSize,
 }: {
   search: string;
-  pageNumber: number;
+  page: number;
   pageSize: number;
 }) {
   const qs = new URLSearchParams();
 
   if (search) qs.set("Search", search);
-  qs.set("PageNumber", String(pageNumber));
+  qs.set("PageNumber", String(page));
   qs.set("PageSize", String(pageSize));
 
   const res = await axiosInstance.get(`/Branches?${qs.toString()}`);
