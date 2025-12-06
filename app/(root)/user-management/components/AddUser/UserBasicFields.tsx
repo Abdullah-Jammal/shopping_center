@@ -36,6 +36,26 @@ export function UserBasicFields({ form }: UserBasicFieldsProps) {
           <FormInput type="password" label="كلمة المرور" field={field} />
         )}
       />
+
+      <FormField
+        control={form.control}
+        name="phoneNumber"
+        render={({ field }) => (
+          <FormInput
+            label="رقم الهاتف"
+            field={field}
+            placeholder="07*********"
+          />
+        )}
+      />
+
+      <FormField
+        control={form.control}
+        name="address"
+        render={({ field }) => (
+          <FormInput label="العنوان" field={field} placeholder="BGW" />
+        )}
+      />
     </>
   );
 }

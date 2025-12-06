@@ -1,6 +1,7 @@
 import { FormField } from "@/components/ui/form";
 import FormSelect from "@/components/form/FormSelect";
 import { UserTypeFieldsProps } from "../../types/add-user";
+import SearchableFormSelect from "@/components/form/SearchableFormSelect";
 
 export function UserTypeFields({
   form,
@@ -13,6 +14,7 @@ export function UserTypeFields({
   headquarters,
   branches,
   centers,
+  setHqSearch,
 }: UserTypeFieldsProps) {
   return (
     <>
@@ -31,6 +33,7 @@ export function UserTypeFields({
               { value: "AffiliatedCenterAdmin", label: "مدير مركز تابع" },
               { value: "Accountant", label: "محاسب" },
             ]}
+            onClear={() => field.onChange("")}
           />
         )}
       />
@@ -40,13 +43,14 @@ export function UserTypeFields({
           control={form.control}
           name="headquarterId"
           render={({ field }) => (
-            <FormSelect
+            <SearchableFormSelect
               label="المقر الرئيسي"
               placeholder="اختر المقر"
               field={field}
               disabled={disableHQ}
               onClear={() => field.onChange("")}
               options={headquarters}
+              onSearch={(value) => setHqSearch(value)}
             />
           )}
         />

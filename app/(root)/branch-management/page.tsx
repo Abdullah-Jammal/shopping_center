@@ -40,7 +40,7 @@ export default function BranchManagementPage() {
 
   return (
     <DashboardLayout title="إدارة الفروع">
-      <div className="flex items-start justify-between flex-wrap gap-4">
+      <div className="flex items-start justify-between flex-wrap gap-4 mb-6">
         <BranchFilters search={search} setSearch={setSearch} />
         <AddBranch />
       </div>

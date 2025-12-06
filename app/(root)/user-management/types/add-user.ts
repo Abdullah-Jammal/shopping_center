@@ -32,4 +32,5 @@ export interface UserTypeFieldsProps {
   headquarters: OptionItem[];
   branches: OptionItem[];
   centers: OptionItem[];
+  setHqSearch: React.Dispatch<React.SetStateAction<string>>;
 }

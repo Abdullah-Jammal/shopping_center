@@ -35,9 +35,14 @@ export const AddUser = () => {
 
   const mutation = useAddUser();
 
+  const [hqSearch, setHqSearch] = useState("");
+
   const headquartersData =
-    useGetHeadquarters({ search: "", pageNumber: 1, pageSize: 200 }).data
-      ?.data ?? [];
+    useGetHeadquarters({
+      search: hqSearch,
+      pageNumber: 1,
+      pageSize: 10,
+    }).data?.data ?? [];
 
   const branchesData =
     useGetBranches({ search: "", pageNumber: 1, pageSize: 200 }).data?.data ??
@@ -61,7 +66,11 @@ export const AddUser = () => {
   }));
 
   const onSubmit = (data: AddUserSchema) => {
-    mutation.mutate(data, {
+    const cleanedData = Object.fromEntries(
+      Object.entries(data).filter(([_, v]) => v !== "")
+    );
+
+    mutation.mutate(cleanedData as AddUserSchema, {
       onSuccess: () => {
         form.reset();
         setOpen(false);
@@ -78,12 +87,12 @@ export const AddUser = () => {
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="w-[90%] md:w-[70%] max-w-[50%]" dir="rtl">
+      <DialogContent dir="rtl">
         <DialogTitle className="hidden"></DialogTitle>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="grid grid-cols-2 gap-4 mt-4"
+            className="grid grid-cols-2 gap-6 mt-6 px-4"
           >
             <UserBasicFields form={form} />
 
@@ -98,6 +107,7 @@ export const AddUser = () => {
               headquarters={headquarters}
               branches={branches}
               centers={centers}
+              setHqSearch={setHqSearch}
             />
 
             <div className="col-span-2 mt-4">
