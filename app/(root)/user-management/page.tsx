@@ -46,7 +46,7 @@ export default function UsersPage() {
       {isError ? (
         <ErrorState onRetry={refetch} />
       ) : isLoading ? (
-        <TableSkeleton rows={6} columns={columns.length} />
+        <TableSkeleton rows={5} columns={columns.length} />
       ) : (
         <>
           <DataTable columns={columns} data={users} metadata={metadata} />

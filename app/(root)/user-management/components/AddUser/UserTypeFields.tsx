@@ -15,6 +15,8 @@ export function UserTypeFields({
   branches,
   centers,
   setHqSearch,
+  setBranchSearch,
+  setCenterSearch,
 }: UserTypeFieldsProps) {
   return (
     <>
@@ -61,13 +63,14 @@ export function UserTypeFields({
           control={form.control}
           name="branchId"
           render={({ field }) => (
-            <FormSelect
+            <SearchableFormSelect
               label="الفرع"
               placeholder="اختر الفرع"
               field={field}
               disabled={disableBranch}
               onClear={() => field.onChange("")}
               options={branches}
+              onSearch={(value) => setBranchSearch(value)}
             />
           )}
         />
@@ -78,13 +81,14 @@ export function UserTypeFields({
           control={form.control}
           name="affiliatedCenterId"
           render={({ field }) => (
-            <FormSelect
+            <SearchableFormSelect
               label="المركز التابع"
               placeholder="اختر المركز"
               field={field}
               disabled={disableCenter}
               onClear={() => field.onChange("")}
               options={centers}
+              onSearch={(value) => setCenterSearch(value)}
             />
           )}
         />

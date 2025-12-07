@@ -48,7 +48,7 @@ export default function BranchManagementPage() {
       {isError ? (
         <ErrorState onRetry={refetch} />
       ) : isLoading ? (
-        <TableSkeleton rows={6} columns={columns.length} />
+        <TableSkeleton rows={5} columns={columns.length} />
       ) : (
         <>
           <DataTable columns={columns} data={branches} metadata={metadata} />

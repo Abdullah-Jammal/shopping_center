@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/dialog";
 import { Form, FormField } from "@/components/ui/form";
 import FormInput from "@/components/form/FormInput";
-import FormSelect from "@/components/form/FormSelect";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useAddBranch } from "../hooks/useAddBranch";
@@ -19,15 +18,17 @@ import { AddBranchSchema, addBranchSchema } from "../schema/addBranchSchema";
 
 import { PlusCircle } from "lucide-react";
 import { useGetHeadquarters } from "../../headquarter-management/hooks/useGetHeadquarters";
+import SearchableFormSelect from "@/components/form/SearchableFormSelect";
 
 export const AddBranch = () => {
   const [open, setOpen] = useState(false);
+  const [hqSearch, setHqSearch] = useState("");
 
   const mutation = useAddBranch();
   const { data: hqRes } = useGetHeadquarters({
-    search: "",
+    search: hqSearch,
     pageNumber: 1,
-    pageSize: 200,
+    pageSize: 5,
   });
 
   const headquarters = hqRes?.data ?? [];
@@ -91,7 +92,7 @@ export const AddBranch = () => {
               control={form.control}
               name="headquarterId"
               render={({ field }) => (
-                <FormSelect
+                <SearchableFormSelect
                   label="المقر الرئيسي"
                   placeholder="اختر المقر"
                   field={field}
@@ -100,6 +101,7 @@ export const AddBranch = () => {
                     value: hq.id,
                     label: hq.name ?? "مقر بدون اسم",
                   }))}
+                  onSearch={(value) => setHqSearch(value)}
                 />
               )}
             />

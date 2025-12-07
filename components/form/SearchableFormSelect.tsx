@@ -116,8 +116,6 @@ export default function SearchableFormSelect({
                     value={o.label}
                     onSelect={() => {
                       field.onChange(o.value);
-                      setInputValue("");
-                      onSearch?.("");
                       setOpen(false);
                     }}
                   >

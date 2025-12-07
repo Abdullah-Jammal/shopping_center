@@ -36,19 +36,26 @@ export const AddUser = () => {
   const mutation = useAddUser();
 
   const [hqSearch, setHqSearch] = useState("");
+  const [branchSearch, setBranchSearch] = useState("");
+  const [centerSearch, setCenterSearch] = useState("");
 
   const headquartersData =
     useGetHeadquarters({
       search: hqSearch,
       pageNumber: 1,
-      pageSize: 10,
+      pageSize: 5,
     }).data?.data ?? [];
 
   const branchesData =
-    useGetBranches({ search: "", pageNumber: 1, pageSize: 200 }).data?.data ??
-    [];
+    useGetBranches({ search: branchSearch, pageNumber: 1, pageSize: 5 }).data
+      ?.data ?? [];
 
-  const centersData = useGetAffiliatedCenters().data?.data ?? [];
+  const centersData =
+    useGetAffiliatedCenters({
+      search: centerSearch,
+      pageNumber: 1,
+      pageSize: 5,
+    }).data?.data ?? [];
 
   const headquarters = headquartersData.map((hq: HQ) => ({
     value: hq.id,
@@ -108,6 +115,8 @@ export const AddUser = () => {
               branches={branches}
               centers={centers}
               setHqSearch={setHqSearch}
+              setBranchSearch={setBranchSearch}
+              setCenterSearch={setCenterSearch}
             />
 
             <div className="col-span-2 mt-4">

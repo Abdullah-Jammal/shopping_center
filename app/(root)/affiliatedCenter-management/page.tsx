@@ -57,7 +57,7 @@ export default function AffiliatedCenterManagementPage() {
       {isError ? (
         <ErrorState onRetry={refetch} />
       ) : isLoading ? (
-        <TableSkeleton rows={6} columns={columns.length} />
+        <TableSkeleton rows={5} columns={columns.length} />
       ) : (
         <>
           <DataTable columns={columns} data={centers} metadata={metadata} />

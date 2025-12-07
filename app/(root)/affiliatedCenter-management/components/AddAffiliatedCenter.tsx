@@ -14,7 +14,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormField } from "@/components/ui/form";
 import FormInput from "@/components/form/FormInput";
-import FormSelect from "@/components/form/FormSelect";
 import { useAddAffiliatedCenter } from "../hooks/useAddAffiliatedCenter";
 import {
   addAffiliatedCenterSchema,
@@ -22,22 +21,25 @@ import {
 } from "../schema/addAffiliatedCenterSchema";
 import { useGetHeadquarters } from "../../headquarter-management/hooks/useGetHeadquarters";
 import { useGetBranches } from "../../branch-management/hooks/useGetBranches";
+import SearchableFormSelect from "@/components/form/SearchableFormSelect";
 
 export const AddAffiliatedCenter = () => {
   const [open, setOpen] = useState(false);
   const mutation = useAddAffiliatedCenter();
+  const [hqSearch, setHqsearch] = useState("");
+  const [branchSearch, setBranchSearch] = useState("");
 
   const { data: headquartersRes } = useGetHeadquarters({
     pageNumber: 1,
-    pageSize: 200,
-    search: "",
+    pageSize: 5,
+    search: hqSearch,
   });
   const headquarters = headquartersRes?.data ?? [];
 
   const { data: branchesRes } = useGetBranches({
     pageNumber: 1,
-    pageSize: 200,
-    search: "",
+    pageSize: 5,
+    search: branchSearch,
   });
   const branches = branchesRes?.data ?? [];
 
@@ -120,7 +122,7 @@ export const AddAffiliatedCenter = () => {
               control={form.control}
               name="headquarterId"
               render={({ field }) => (
-                <FormSelect
+                <SearchableFormSelect
                   field={field}
                   label="المقر"
                   placeholder="اختر المقر"
@@ -130,6 +132,7 @@ export const AddAffiliatedCenter = () => {
                   }))}
                   disabled={!!selectedBranch}
                   onClear={clearHQ}
+                  onSearch={(value) => setHqsearch(value)}
                 />
               )}
             />
@@ -138,7 +141,7 @@ export const AddAffiliatedCenter = () => {
               control={form.control}
               name="branchId"
               render={({ field }) => (
-                <FormSelect
+                <SearchableFormSelect
                   field={field}
                   label="الفرع"
                   placeholder="اختر الفرع"
@@ -148,6 +151,7 @@ export const AddAffiliatedCenter = () => {
                   }))}
                   disabled={!!selectedHQ}
                   onClear={clearBranch}
+                  onSearch={(value) => setBranchSearch(value)}
                 />
               )}
             />
