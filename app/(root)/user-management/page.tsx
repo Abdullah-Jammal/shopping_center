@@ -11,6 +11,7 @@ import { TableSkeleton } from "@/components/tables/TableSkeleton";
 import { useUsersPagination } from "@/store/user-management/useUsersPagination";
 import { DataTablePagination } from "@/components/tables/DataTablePagination";
 import { useEffect } from "react";
+
 export default function UsersPage() {
   const {
     pageNumber,
@@ -37,7 +38,7 @@ export default function UsersPage() {
   }, [data?.metadata?.totalPages]);
 
   return (
-    <DashboardLayout title="User Management">
+    <DashboardLayout title="إدارة المستخدمين">
       <div className="flex justify-between items-start gap-4">
         <UserManagementFilters />
         <AddUser />

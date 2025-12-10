@@ -24,7 +24,7 @@ export function DeleteUserButton({ userId }: { userId: string }) {
       <AlertDialogTrigger asChild>
         <Button
           variant="ghost"
-          className="text-red-600 hover:bg-red-200 bg-red-100 hover:text-red-700 rounded-md w-14 cursor-pointer"
+          className="text-red-600 hover:bg-red-200 bg-red-100 hover:text-red-700 rounded-md w-10 cursor-pointer"
         >
           <Trash2 className="h-3 w-3" />
         </Button>
@@ -32,20 +32,20 @@ export function DeleteUserButton({ userId }: { userId: string }) {
 
       <AlertDialogContent dir="rtl">
         <AlertDialogHeader>
-          <AlertDialogTitle>هل أنت متأكد؟</AlertDialogTitle>
-          <AlertDialogDescription>
+          <AlertDialogTitle className="text-right">هل أنت متأكد؟</AlertDialogTitle>
+          <AlertDialogDescription className="text-right">
             سيتم حذف هذا المستخدم بشكل نهائي ولا يمكن التراجع عن العملية.
           </AlertDialogDescription>
         </AlertDialogHeader>
 
-        <AlertDialogFooter>
-          <AlertDialogCancel>إلغاء</AlertDialogCancel>
+        <AlertDialogFooter className="mt-2" dir="ltr">
           <AlertDialogAction
-            className="bg-red-600 hover:bg-red-700"
+            className="bg-red-600 hover:bg-red-600 w-32"
             onClick={() => mutation.mutate(userId)}
-          >
+            >
             حذف
           </AlertDialogAction>
+            <AlertDialogCancel>إلغاء</AlertDialogCancel>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

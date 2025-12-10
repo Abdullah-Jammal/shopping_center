@@ -2,6 +2,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 import { DeleteUserButton } from "../components/DeleteUserButton";
 import { UserManagementProps } from "../types/users";
+import { UpdateUserForm } from "./UpdateUserButton";
 
 export const columns: ColumnDef<UserManagementProps>[] = [
   {
@@ -38,6 +39,11 @@ export const columns: ColumnDef<UserManagementProps>[] = [
   {
     id: "actions",
     header: "إجراءات",
-    cell: ({ row }) => <DeleteUserButton userId={row.original.id} />,
+    cell: ({ row }) => (
+      <div className="flex gap-2">
+        <UpdateUserForm user={row.original} />
+        <DeleteUserButton userId={row.original.id} />
+      </div>
+    ),
   },
 ];
